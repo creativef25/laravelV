@@ -14,4 +14,4 @@
 Route::get('/', function () {
     return view('dashboard');
 });
-Route::resource('tareas', 'TareasController', ['except' => 'show']);
+Route::resource('tareas', 'TareasController', ['except' => 'show', 'create', 'edit']);

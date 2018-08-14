@@ -12,21 +12,21 @@ class TareasController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $tarea = Tareas::get();
+        $tarea = Tareas::orderBy('id', 'DESC')->paginate(2);
 
-        return $tarea;
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //formulario
+        return [
+          'pagination' => [
+            'total' => $tarea->total(),
+            'current_page' => $tarea->currentPage(),
+            'per_page' => $tarea->perPage(),
+            'last_page' => $tarea->lastPage(),
+            'from' => $tarea->firstItem(),
+            'to' => $tarea->lastItem(),
+          ],
+          'tareas' => $tarea
+        ];
     }
 
     /**
@@ -37,21 +37,13 @@ class TareasController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $this->validate($request, [
+          'keep' => 'required',
+        ]);
 
+        Tareas::create($request->all());
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $tarea = Tareas::findOrFail($id);
-        //formulario
-        return $tarea;
+        return;
     }
 
     /**
@@ -63,7 +55,13 @@ class TareasController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+          'keep' => 'required',
+        ]);
+
+        Tareas::find($id)->update($request->all());
+
+        return;
     }
 
     /**
